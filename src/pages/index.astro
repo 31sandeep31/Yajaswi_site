@@ -1,0 +1,284 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import NewsCard from '../components/NewsCard.astro';
+import VideoCard from '../components/VideoCard.astro';
+import ShareBar from '../components/ShareBar.astro';
+import site from '../data/site.json';
+import { getNews, getVideos } from '../lib/content';
+import portrait from '../assets/portrait.jpg';
+import portraitBw from '../assets/portrait-bw.jpg';
+
+const news = (await getNews()).slice(0, 3);
+const allVideos = await getVideos();
+const featured = allVideos.filter((v) => v.data.featured);
+const videos = (featured.length >= 3 ? featured : allVideos).slice(0, 3);
+const { campaign } = site;
+
+const highlights = [
+  { k: 'Youth Congress Nepal', v: 'President, 2024 – present' },
+  { k: 'University of Sydney', v: 'Master of Sustainability (Distinction)' },
+  { k: 'Australia Awards', v: 'Recipient 2022 · Face of Australia Awards 2023' },
+  { k: 'Kathmandu University', v: 'Lecturer, Governance & Social Accountability' },
+];
+---
+
+<Base>
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-text">
+        {campaign.active && <p class="eyebrow" lang="ne">{campaign.eyebrowNe}</p>}
+        <h1 class="hero-name">
+          <span class="deva-display" lang="ne">{site.nameNe}</span>
+          <span class="hero-name-en">{site.name}</span>
+        </h1>
+        {campaign.active ? (
+          <div class="campaign">
+            <p class="campaign-head deva-display" lang="ne">{campaign.headlineNe}</p>
+            <p class="campaign-detail" lang="ne">{campaign.detailNe}</p>
+            <p class="campaign-en">{campaign.headlineEn} — {campaign.detailEn}</p>
+            <p class="badge" lang="ne"><span aria-hidden="true">✓</span> {campaign.badgeNe}</p>
+          </div>
+        ) : (
+          <p class="campaign-detail" lang="ne">{site.taglineNe}</p>
+        )}
+        <div class="hero-cta">
+          <a class="btn btn--red" href="/news/"><span lang="ne">ताजा समाचार</span> · Latest news</a>
+          <a class="btn" href="/about/">About Yajaswi</a>
+        </div>
+      </div>
+      <div class="hero-photo">
+        <Image
+          src={portrait}
+          alt="Yajaswi Rai, smiling, in a blue Rai traditional dress and a woven shawl"
+          widths={[480, 800, 1200]}
+          sizes="(max-width: 860px) 100vw, 50vw"
+          loading="eager"
+          fetchpriority="high"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="section message" lang="ne">
+    <div class="wrap message-grid">
+      <div>
+        <p class="eyebrow">किन म?</p>
+        <h2 class="message-h">महिला, जनजाति र युवा — तीन पहिचान, एउटै आवाज</h2>
+        {site.messageNe.map((p) => <p>{p}</p>)}
+        <p class="message-en" lang="en">{site.messageEn}</p>
+      </div>
+      <ul class="stats" aria-label="Three identities">
+        {site.identities.map((s) => (
+          <li class="stat">
+            <span class="stat-value">{s.value}</span>
+            <span class="stat-label">{s.labelNe} <span lang="en">· {s.labelEn}</span></span>
+            <span class="stat-note">{s.noteNe}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--tint">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">News</p>
+          <h2 lang="ne">ताजा समाचार</h2>
+        </div>
+        <a class="link-arrow" href="/news/">All news</a>
+      </div>
+      <div class="grid grid--3">
+        {news.map((item) => <NewsCard item={item} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Interviews & talks</p>
+          <h2>In conversation</h2>
+        </div>
+        <a class="link-arrow" href="/videos/">All videos</a>
+      </div>
+      <div class="grid grid--3">
+        {videos.map((v) => <VideoCard video={v} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tint">
+    <div class="wrap about-grid">
+      <Image src={portraitBw} alt="Black and white portrait of Yajaswi Rai" widths={[480, 800]} sizes="(max-width: 860px) 100vw, 45vw" class="about-photo" />
+      <div>
+        <p class="eyebrow">About</p>
+        <h2>From activism and research to party leadership</h2>
+        <p>
+          Yajaswi Rai is a social activist, researcher and youth leader from Kathmandu. For close to a decade she has
+          worked on governance, social accountability, gender equality, sustainable development and youth participation,
+          with organisations including PLAN International Nepal, Inclusive Forum Nepal and Ujyalo Foundation. She has
+          also written policy research for Nepal's parliamentarians on climate change, foreign employment and AI ethics.
+        </p>
+        <dl class="highlights">
+          {highlights.map((h) => (
+            <div>
+              <dt>{h.k}</dt>
+              <dd>{h.v}</dd>
+            </div>
+          ))}
+        </dl>
+        <a class="btn" href="/about/">Full profile</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section follow">
+    <div class="wrap follow-inner">
+      <div>
+        <h2 lang="ne">अभियानसँगै जोडिनुहोस्</h2>
+        <p>Share this page with fellow delegates and friends, and follow for every update from the convention.</p>
+      </div>
+      <ShareBar title={`${site.nameNe} — ${campaign.headlineNe}`} path="/" />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero { padding-block: clamp(32px, 6vw, 72px) clamp(48px, 7vw, 96px); overflow: hidden; }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    gap: clamp(28px, 5vw, 64px);
+    align-items: center;
+  }
+  .hero-name { margin: 0 0 1.25rem; }
+  .hero-name .deva-display {
+    display: block;
+    font-size: clamp(3rem, 8vw, 5.5rem);
+    line-height: 1.15;
+    color: var(--ink);
+  }
+  .hero-name-en {
+    display: block;
+    font-size: clamp(1.1rem, 2.2vw, 1.5rem);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    font-weight: 500;
+    margin-top: 0.35rem;
+  }
+  .campaign { border-left: 4px solid var(--red); padding: 0.2rem 0 0.2rem 1.2rem; margin-bottom: 1.75rem; }
+  .campaign-head { font-size: clamp(1.5rem, 3.2vw, 2.1rem); color: var(--red); margin: 0; }
+  .campaign-detail { font-size: 1.2rem; font-weight: 500; margin: 0.2rem 0 0.4rem; }
+  .campaign-en { color: var(--ink-3); font-size: 0.95rem; margin: 0 0 0.9rem; }
+  .badge {
+    display: inline-flex;
+    gap: 0.5em;
+    align-items: center;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.35rem 0.9rem;
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin: 0;
+  }
+  .badge span { color: var(--green); font-weight: 700; }
+  .hero-cta { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  .hero-photo { position: relative; }
+  .hero-photo::before {
+    content: '';
+    position: absolute;
+    inset: 8% -6% -6% 10%;
+    background: var(--red);
+    border-radius: 28px;
+    z-index: 0;
+  }
+  .hero-photo :global(img) {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    aspect-ratio: 4 / 4.4;
+    object-fit: cover;
+    object-position: 62% 30%;
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+  }
+  @media (max-width: 860px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero-photo { order: -1; max-width: 520px; margin-right: 6%; }
+    .hero-photo :global(img) { aspect-ratio: 4 / 3.4; }
+  }
+
+  .message-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: clamp(28px, 6vw, 80px);
+    align-items: center;
+  }
+  .message-h { font-size: clamp(1.6rem, 3.4vw, 2.4rem); }
+  .message-grid p { font-size: 1.15rem; line-height: 1.85; }
+  .message-grid .message-en { font-size: 1rem; line-height: 1.7; color: var(--ink-3); margin-top: 1.5rem; }
+  .stats { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+  .stat {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+    column-gap: 1.2rem;
+    align-items: center;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1.1rem 1.4rem;
+  }
+  .stat-value {
+    grid-row: span 2;
+    font: 700 clamp(2.2rem, 4.5vw, 3rem) / 1 var(--font-deva-display);
+    color: var(--red);
+    min-width: 4.2ch;
+  }
+  .stat-label { font-weight: 700; font-size: 1.15rem; }
+  .stat-label span { font-weight: 500; color: var(--ink-3); font-size: 0.95rem; }
+  .stat-note { color: var(--ink-3); font-size: 0.95rem; }
+  @media (max-width: 860px) {
+    .message-grid { grid-template-columns: 1fr; }
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: clamp(28px, 5vw, 64px);
+    align-items: center;
+  }
+  .about-grid h2 { font-size: clamp(1.6rem, 3.2vw, 2.3rem); }
+  .about-grid :global(.about-photo) { border-radius: 20px; width: 100%; aspect-ratio: 4 / 4.2; object-fit: cover; object-position: 65% 30%; }
+  .highlights {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+    gap: 1rem 1.5rem;
+    margin: 1.5rem 0 1.75rem;
+  }
+  .highlights div { border-top: 1px solid var(--line); padding-top: 0.6rem; }
+  .highlights dt { font-weight: 700; }
+  .highlights dd { margin: 0; color: var(--ink-2); font-size: 0.95rem; }
+  @media (max-width: 860px) {
+    .about-grid { grid-template-columns: 1fr; }
+  }
+
+  .follow { background: var(--red); color: #fff; }
+  .follow-inner {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 2rem;
+    align-items: center;
+  }
+  .follow h2 { font-size: clamp(1.7rem, 3.4vw, 2.4rem); color: #fff; }
+  .follow p { color: #ffe1e4; margin: 0; }
+  .follow :global(.share-label) { color: #ffd0d6; }
+  @media (max-width: 860px) {
+    .follow-inner { grid-template-columns: 1fr; }
+  }
+</style>

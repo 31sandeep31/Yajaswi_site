@@ -1,0 +1,76 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import ShareBar from '../../components/ShareBar.astro';
+import VideoEmbed from '../../components/VideoEmbed.astro';
+import VideoCard from '../../components/VideoCard.astro';
+import { formatDate, getVideos, videoCategories } from '../../lib/content';
+import { youtubeThumb } from '../../lib/youtube';
+
+export async function getStaticPaths() {
+  const videos = await getVideos();
+  return videos.map((video) => ({
+    params: { id: video.id },
+    props: { video, more: videos.filter((v) => v.id !== video.id).slice(0, 3) },
+  }));
+}
+
+const { video, more } = Astro.props;
+const { title, show, youtube, date, category, summary } = video.data;
+const { Content } = await render(video);
+---
+
+<Base
+  title={title}
+  description={summary ?? (show ? `${title} — ${show}` : title)}
+  image={youtubeThumb(youtube)}
+  type="video.other"
+  publishedTime={date}
+>
+  <article class="section">
+    <div class="wrap narrow">
+      <a class="back" href="/videos/">← All videos</a>
+      <VideoEmbed url={youtube} title={title} />
+      <p class="meta">
+        <span class="tag">{videoCategories[category].en}</span>
+        <time datetime={date.toISOString()}>{formatDate(date)}</time>
+      </p>
+      <h1>{title}</h1>
+      {show && <p class="show">{show}</p>}
+      {summary && <p class="lede">{summary}</p>}
+      <div class="prose"><Content /></div>
+      <div class="actions">
+        <ShareBar title={title} />
+        <a class="btn" href={youtube} target="_blank" rel="noopener">Watch on YouTube ↗</a>
+      </div>
+    </div>
+  </article>
+
+  {more.length > 0 && (
+    <section class="section section--tint">
+      <div class="wrap">
+        <div class="section-head"><h2>More videos</h2></div>
+        <div class="grid grid--3">{more.map((v) => <VideoCard video={v} />)}</div>
+      </div>
+    </section>
+  )}
+</Base>
+
+<style>
+  .narrow { max-width: 900px; }
+  .back { display: inline-block; text-decoration: none; font-weight: 600; color: var(--ink-3); margin-bottom: 1.5rem; }
+  .meta { display: flex; gap: 0.6rem; align-items: center; color: var(--ink-3); margin: 1.5rem 0 0.5rem; }
+  h1 { font-size: clamp(1.8rem, 4.2vw, 2.7rem); margin-bottom: 0.25rem; }
+  .show { color: var(--ink-2); font-weight: 600; }
+  .lede { font-size: 1.15rem; color: var(--ink-2); }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: end;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+  }
+</style>

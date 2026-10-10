@@ -1,0 +1,183 @@
+# Content manager for the site. Every save becomes a commit in the GitHub
+# repo, which triggers a rebuild on the host (Cloudflare Pages / Netlify).
+# Field names must stay in sync with src/content.config.ts.
+
+backend:
+  name: github
+  repo: OWNER/yajaswi-rai-site # TODO: replace with the real GitHub repo
+  branch: main
+  # Needed for the "Sign in with GitHub" button on hosts other than Netlify.
+  # See README → "CMS login". Remove this line if you sign in with a token.
+  # base_url: https://your-auth-worker.workers.dev
+
+site_url: https://yajaswirai.com
+display_url: https://yajaswirai.com
+logo_url: /favicon.svg
+
+media_folder: public/uploads
+public_folder: /uploads
+
+slug:
+  encoding: ascii
+  clean_accents: true
+
+collections:
+  - name: news
+    label: News · समाचार
+    label_singular: News item
+    folder: src/content/news
+    create: true
+    # Nepali titles can't make ASCII URLs, so the slug is date + an English "URL name".
+    slug: '{{year}}-{{month}}-{{day}}-{{fields.urlName}}'
+    summary: '{{date | date("YYYY-MM-DD")}} — {{title}}'
+    sortable_fields: [date, title]
+    view_filters:
+      - { label: Drafts, field: draft, pattern: true }
+      - { label: Nepali, field: lang, pattern: ne }
+      - { label: English, field: lang, pattern: en }
+    fields:
+      - { name: title, label: Headline, widget: string }
+      - name: urlName
+        label: URL name (English, short)
+        hint: 'Used only in the web address, e.g. "central-member-candidacy". Letters, numbers and dashes.'
+        widget: string
+        pattern: ['^[a-z0-9-]+$', 'Lowercase letters, numbers and dashes only']
+      - { name: date, label: Date, widget: datetime, format: 'YYYY-MM-DD', time_format: false }
+      - name: summary
+        label: Summary
+        hint: One or two sentences. Shown on cards and in the Facebook/WhatsApp preview.
+        widget: text
+      - name: lang
+        label: Language
+        widget: select
+        default: ne
+        options: [{ label: नेपाली, value: ne }, { label: English, value: en }]
+      - name: cover
+        label: Cover photo
+        hint: Landscape, at least 1200×630 — this becomes the share preview image.
+        widget: image
+        required: false
+      - { name: source, label: 'Source outlet (for press coverage)', widget: string, required: false }
+      - { name: sourceUrl, label: 'Original article link', widget: string, required: false }
+      - { name: tags, label: Tags, widget: list, required: false, default: [] }
+      - { name: featured, label: Featured, widget: boolean, default: false }
+      - { name: draft, label: 'Draft (hide from site)', widget: boolean, default: false }
+      - { name: body, label: Article, widget: markdown }
+
+  - name: videos
+    label: Videos · भिडियो
+    label_singular: Video
+    folder: src/content/videos
+    create: true
+    slug: '{{fields.urlName}}'
+    summary: '{{date | date("YYYY-MM-DD")}} — {{title}}'
+    sortable_fields: [date, title]
+    fields:
+      - { name: title, label: Title, widget: string }
+      - name: urlName
+        label: URL name (English, short)
+        widget: string
+        pattern: ['^[a-z0-9-]+$', 'Lowercase letters, numbers and dashes only']
+      - name: youtube
+        label: YouTube link
+        hint: Paste any YouTube link (youtube.com/watch?v=… or youtu.be/…).
+        widget: string
+      - { name: show, label: 'Programme / channel', widget: string, required: false }
+      - { name: date, label: Date, widget: datetime, format: 'YYYY-MM-DD', time_format: false }
+      - name: category
+        label: Type
+        widget: select
+        default: interview
+        options:
+          - { label: Interview, value: interview }
+          - { label: Talk / panel, value: talk }
+          - { label: Campaign, value: campaign }
+          - { label: Film / series, value: documentary }
+      - { name: summary, label: Summary, widget: text, required: false }
+      - { name: featured, label: 'Feature on homepage', widget: boolean, default: false }
+      - { name: draft, label: 'Draft (hide from site)', widget: boolean, default: false }
+      - { name: body, label: 'Notes (optional)', widget: markdown, required: false }
+
+  - name: settings
+    label: Site settings
+    editor: { preview: false }
+    files:
+      - name: site
+        label: Homepage & campaign
+        file: src/data/site.json
+        fields:
+          - { name: name, label: Name (English), widget: string }
+          - { name: nameNe, label: Name (Nepali), widget: string }
+          - { name: tagline, label: Tagline (English), widget: string }
+          - { name: taglineNe, label: Tagline (Nepali), widget: string }
+          - name: campaign
+            label: Campaign banner
+            widget: object
+            fields:
+              - { name: active, label: 'Show campaign banner', widget: boolean }
+              - { name: eyebrowNe, label: 'Small heading (Nepali)', widget: string }
+              - { name: headlineNe, label: 'Headline (Nepali)', widget: string }
+              - { name: detailNe, label: 'Detail line (Nepali)', widget: string }
+              - { name: headlineEn, label: 'Headline (English)', widget: string }
+              - { name: detailEn, label: 'Detail line (English)', widget: string }
+              - { name: badgeNe, label: 'Badge (Nepali)', widget: string }
+              - { name: closingNe, label: 'Closing line', widget: string }
+          - name: messageNe
+            label: Message paragraphs (Nepali)
+            widget: list
+            field: { name: paragraph, label: Paragraph, widget: text }
+          - { name: messageEn, label: Message (English), widget: text }
+          - name: identities
+            label: Identity figures
+            widget: list
+            fields:
+              - { name: labelNe, label: Label (Nepali), widget: string }
+              - { name: labelEn, label: Label (English), widget: string }
+              - { name: value, label: Figure, widget: string }
+              - { name: noteNe, label: Note, widget: string }
+          - { name: email, label: Public email, widget: string }
+          - name: social
+            label: Social links
+            widget: list
+            fields:
+              - { name: name, label: Name, widget: string }
+              - { name: url, label: Link, widget: string }
+
+      - name: profile
+        label: Profile / CV
+        file: src/data/profile.json
+        fields:
+          - name: bioNe
+            label: Bio (Nepali)
+            widget: list
+            field: { name: paragraph, label: Paragraph, widget: text }
+          - name: bioEn
+            label: Bio (English)
+            widget: list
+            field: { name: paragraph, label: Paragraph, widget: text }
+          - { name: quote, label: Quote, widget: text }
+          - name: experience
+            label: Experience
+            widget: list
+            summary: '{{fields.role}} — {{fields.org}}'
+            fields:
+              - { name: role, label: Role, widget: string }
+              - { name: org, label: Organisation, widget: string }
+              - { name: period, label: Period, widget: string, required: false }
+              - name: points
+                label: Highlights
+                widget: list
+                field: { name: point, label: Point, widget: text }
+          - name: education
+            label: Education
+            widget: list
+            summary: '{{fields.degree}}'
+            fields:
+              - { name: degree, label: Degree, widget: string }
+              - { name: school, label: School, widget: string }
+              - { name: year, label: Year, widget: string }
+              - { name: note, label: Note, widget: string, required: false }
+          - name: honours
+            label: Honours & affiliations
+            widget: list
+            field: { name: item, label: Item, widget: string }

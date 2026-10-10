@@ -1,0 +1,32 @@
+{
+  "name": "Yajaswi Rai",
+  "nameNe": "यजस्वी राई",
+  "tagline": "Social activist · Researcher · Youth leader",
+  "taglineNe": "सामाजिक अभियन्ता · अनुसन्धानकर्ता · युवा नेतृ",
+  "campaign": {
+    "active": true,
+    "eyebrowNe": "नेपाली कांग्रेस १५औँ महाधिवेशन",
+    "headlineNe": "केन्द्रीय सदस्य पदमा उम्मेदवार",
+    "detailNe": "बागमती प्रदेश · ३५ वर्षमुनिका युवा महिला क्लस्टर",
+    "headlineEn": "Candidate for Central Member, Nepali Congress 15th General Convention",
+    "detailEn": "Bagmati Province · Young women (under 35) cluster",
+    "badgeNe": "महाधिवेशन प्रतिनिधि, काठमाडौं क्षेत्र नं. १ (निर्विरोध)",
+    "closingNe": "जय नेपाल"
+  },
+  "messageNe": [
+    "अस्ट्रेलियामा अध्ययनका क्रममा मैले आदिवासी जनजातिको हकहितका लागि काम गर्ने संस्थाहरूलाई नजिकबाट चिन्ने अवसर पाएँ। मनको एउटा कुनामा लाग्यो — यस्ता संस्था र यस्तो सोच त नेपालमा पनि हुनुपर्छ।",
+    "विश्वविद्यालयका वर्षहरूमा अन्तरसम्बन्धित पहिचान (intersectionality) को महत्व अझ गहिरोसँग बुझेँ। गुनासो गर्न होइन, तर राजनीतिमा महिलाका लागि रहेको प्रवेश अवरोधले नै मभित्र राजनीतिमा अझ सक्रिय हुने चाहना जगायो।",
+    "मेरो पहिचान तीनवटा पहिचानले बनेको छ — म महिला हुँ, जनजाति हुँ र युवा हुँ। यी तीनै पहिचान नेपालको बहुसंख्यक जनताको पहिचान हो।"
+  ],
+  "messageEn": "Studying in Australia, I saw up close how organisations can champion Indigenous peoples' rights — and felt Nepal needs the same. University taught me why intersectionality matters. Not to complain, but the barriers women face entering politics only strengthened my resolve to take part. I am a woman, I am Janajati, and I am young: three identities shared by most of Nepal.",
+  "identities": [
+    { "labelNe": "महिला", "labelEn": "Women", "value": "५१%", "noteNe": "जनसंख्याको" },
+    { "labelNe": "जनजाति", "labelEn": "Janajati", "value": "३४.८७%", "noteNe": "जनसंख्याको" },
+    { "labelNe": "युवा (१६–३५ वर्ष)", "labelEn": "Youth (16–35)", "value": "४२%", "noteNe": "जनसंख्याको" }
+  ],
+  "email": "yajaswi.rai@gmail.com",
+  "social": [
+    { "name": "Facebook", "url": "https://www.facebook.com/yajaswi" },
+    { "name": "YouTube · AbaNormal", "url": "https://www.youtube.com/@abanormal3378" }
+  ]
+}

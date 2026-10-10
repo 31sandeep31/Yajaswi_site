@@ -1,0 +1,136 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import ShareBar from '../components/ShareBar.astro';
+import site from '../data/site.json';
+import profile from '../data/profile.json';
+import portraitBw from '../assets/portrait-bw.jpg';
+import awards from '../assets/australia-awards.jpg';
+---
+
+<Base title="About" description={profile.bioEn[0]}>
+  <section class="section intro">
+    <div class="wrap intro-grid">
+      <div>
+        <p class="eyebrow">About · परिचय</p>
+        <h1><span class="deva-display" lang="ne">{site.nameNe}</span> <span class="en">{site.name}</span></h1>
+        <p class="tagline">{site.tagline}</p>
+        <div lang="ne" class="bio-ne">
+          {profile.bioNe.map((p) => <p>{p}</p>)}
+        </div>
+      </div>
+      <Image src={portraitBw} alt="Black and white portrait of Yajaswi Rai" widths={[480, 800]} sizes="(max-width: 860px) 100vw, 40vw" class="intro-photo" loading="eager" />
+    </div>
+  </section>
+
+  <section class="section section--tint">
+    <div class="wrap story">
+      <div class="prose">
+        <h2>Her story</h2>
+        {profile.bioEn.map((p) => <p>{p}</p>)}
+        <blockquote>“{profile.quote}”</blockquote>
+      </div>
+      <figure class="story-photo">
+        <Image src={awards} alt="Yajaswi Rai at an Australia Awards event" widths={[400, 700]} sizes="(max-width: 860px) 100vw, 30vw" />
+        <figcaption>Australia Awards recipient, 2022</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head"><div><p class="eyebrow">Career</p><h2>Experience</h2></div></div>
+      <ol class="timeline">
+        {profile.experience.map((x) => (
+          <li>
+            <p class="period">{x.period}</p>
+            <div>
+              <h3>{x.role}</h3>
+              <p class="org">{x.org}</p>
+              <ul>{x.points.map((p) => <li>{p}</li>)}</ul>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section--tint">
+    <div class="wrap two-col">
+      <div>
+        <p class="eyebrow">Education</p>
+        <h2>Education</h2>
+        <ul class="plain">
+          {profile.education.map((e) => (
+            <li>
+              <strong>{e.degree}</strong>, {e.year}
+              <br /><span class="muted">{e.school} · {e.note}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div>
+        <p class="eyebrow">Recognition</p>
+        <h2>Honours & affiliations</h2>
+        <ul class="plain">{profile.honours.map((h) => <li>{h}</li>)}</ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap share-wrap">
+      <h2>Share this profile</h2>
+      <ShareBar title={`${site.nameNe} (${site.name}) — ${site.tagline}`} />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .intro-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: clamp(28px, 5vw, 64px);
+    align-items: center;
+  }
+  h1 { font-size: clamp(2.6rem, 6vw, 4.2rem); margin-bottom: 0.3rem; }
+  h1 .en { display: block; font-size: 0.4em; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; }
+  .tagline { color: var(--red); font-weight: 700; margin-bottom: 1.5rem; }
+  .bio-ne p { font-size: 1.15rem; line-height: 1.85; }
+  .intro-grid :global(.intro-photo) { width: 100%; border-radius: 20px; aspect-ratio: 4 / 4.6; object-fit: cover; object-position: 66% 30%; }
+
+  .story { display: grid; grid-template-columns: 1.6fr 1fr; gap: clamp(28px, 5vw, 64px); align-items: start; }
+  .story h2 { margin-top: 0; }
+  .story-photo { margin: 0; position: sticky; top: 90px; }
+  .story-photo :global(img) { border-radius: 18px; width: 100%; }
+  figcaption { font-size: 0.9rem; color: var(--ink-3); margin-top: 0.5rem; }
+
+  .timeline { list-style: none; margin: 0; padding: 0; display: grid; }
+  .timeline > li {
+    display: grid;
+    grid-template-columns: 170px 1fr;
+    gap: 1.5rem;
+    padding: 1.5rem 0;
+    border-top: 1px solid var(--line);
+  }
+  .period { font-weight: 700; color: var(--red); margin: 0.2rem 0 0; }
+  .timeline h3 { font-size: 1.3rem; margin-bottom: 0.1rem; }
+  .org { color: var(--ink-2); font-weight: 600; margin-bottom: 0.5rem; }
+  .timeline ul { margin: 0; padding-left: 1.1rem; color: var(--ink-2); }
+  .timeline ul li + li { margin-top: 0.3rem; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1.3fr; gap: clamp(28px, 6vw, 80px); }
+  .two-col h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); }
+  .plain { list-style: none; margin: 0; padding: 0; }
+  .plain li { padding: 0.75rem 0; border-top: 1px solid var(--line); }
+  .muted { color: var(--ink-3); }
+
+  .share-wrap { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1.5rem; }
+  .share-wrap h2 { margin: 0; font-size: 1.8rem; }
+
+  @media (max-width: 860px) {
+    .intro-grid, .story, .two-col { grid-template-columns: 1fr; }
+    .intro-grid :global(.intro-photo) { order: -1; max-width: 460px; aspect-ratio: 4 / 3.6; }
+    .story-photo { position: static; max-width: 420px; }
+    .timeline > li { grid-template-columns: 1fr; gap: 0.25rem; }
+  }
+</style>

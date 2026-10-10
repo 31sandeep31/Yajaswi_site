@@ -1,0 +1,58 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { youtubeThumb } from '../lib/youtube';
+import { formatDate, videoCategories } from '../lib/content';
+
+interface Props {
+  video: CollectionEntry<'videos'>;
+}
+
+const { video } = Astro.props;
+const { title, show, youtube, date, category } = video.data;
+---
+
+<article class="vcard">
+  <a href={`/videos/${video.id}/`} class="thumb">
+    <img src={youtubeThumb(youtube)} alt="" loading="lazy" width="480" height="360" />
+    <span class="play" aria-hidden="true">▶</span>
+  </a>
+  <div class="body">
+    <p class="meta"><span class="tag">{videoCategories[category].en}</span> <time datetime={date.toISOString()}>{formatDate(date)}</time></p>
+    <h3><a href={`/videos/${video.id}/`}>{title}</a></h3>
+    {show && <p class="show">{show}</p>}
+  </div>
+</article>
+
+<style>
+  .vcard {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .vcard:hover { box-shadow: var(--shadow); transform: translateY(-2px); }
+  .thumb { position: relative; display: block; aspect-ratio: 16 / 9; overflow: hidden; background: #111; }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .play {
+    position: absolute;
+    left: 14px;
+    bottom: 14px;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--red);
+    color: #fff;
+    display: grid;
+    place-items: center;
+    font-size: 0.9rem;
+    padding-left: 3px;
+  }
+  .body { padding: 1rem 1.2rem 1.3rem; }
+  .meta { display: flex; gap: 0.6rem; align-items: center; font-size: 0.85rem; color: var(--ink-3); margin-bottom: 0.5rem; }
+  h3 { font-size: 1.2rem; margin: 0 0 0.3rem; }
+  h3 a { text-decoration: none; }
+  .show { font-size: 0.92rem; color: var(--ink-2); margin: 0; }
+</style>

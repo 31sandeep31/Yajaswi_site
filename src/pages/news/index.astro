@@ -1,0 +1,28 @@
+---
+import Base from '../../layouts/Base.astro';
+import NewsCard from '../../components/NewsCard.astro';
+import { getNews } from '../../lib/content';
+
+const news = await getNews();
+---
+
+<Base title="News · समाचार" description="Latest news, statements and press coverage of Yajaswi Rai.">
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">News</p>
+          <h1 lang="ne">समाचार तथा अपडेट</h1>
+          <p class="sub">Statements, campaign updates and press coverage. <a href="/rss.xml">Subscribe via RSS</a></p>
+        </div>
+      </div>
+      <div class="grid grid--3">
+        {news.map((item) => <NewsCard item={item} />)}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  h1 { font-size: clamp(2rem, 4.5vw, 3rem); margin: 0; }
+</style>

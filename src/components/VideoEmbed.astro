@@ -1,0 +1,55 @@
+---
+import { youtubeEmbed, youtubeThumb } from '../lib/youtube';
+
+interface Props {
+  url: string;
+  title: string;
+}
+
+const { url, title } = Astro.props;
+---
+
+<!-- Loads the YouTube player only on click: keeps pages fast on mobile data. -->
+<div class="player" data-player data-src={youtubeEmbed(url)} data-title={title}>
+  <img src={youtubeThumb(url, 'hq')} alt="" loading="lazy" width="480" height="360" />
+  <button type="button" aria-label={`Play video: ${title}`}>
+    <svg viewBox="0 0 68 48" aria-hidden="true"><path d="M66.5 7.7A8.5 8.5 0 0 0 60.5 1.7C55.2.3 34 .3 34 .3s-21.2 0-26.5 1.4a8.5 8.5 0 0 0-6 6C.1 13 .1 24 .1 24s0 11 1.4 16.3a8.5 8.5 0 0 0 6 6c5.3 1.4 26.5 1.4 26.5 1.4s21.2 0 26.5-1.4a8.5 8.5 0 0 0 6-6C67.9 35 67.9 24 67.9 24s0-11-1.4-16.3Z" fill="#b3122a" /><path d="m27 34 18-10-18-10v20Z" fill="#fff" /></svg>
+  </button>
+</div>
+
+<script>
+  for (const el of document.querySelectorAll<HTMLElement>('[data-player]')) {
+    el.querySelector('button')?.addEventListener('click', () => {
+      const frame = document.createElement('iframe');
+      frame.src = el.dataset.src ?? '';
+      frame.title = el.dataset.title ?? 'YouTube video';
+      frame.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+      frame.allowFullscreen = true;
+      el.replaceChildren(frame);
+    });
+  }
+</script>
+
+<style>
+  .player {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: #000;
+    box-shadow: var(--shadow);
+  }
+  .player img { width: 100%; height: 100%; object-fit: cover; }
+  .player button {
+    position: absolute;
+    inset: 0;
+    border: 0;
+    background: rgb(0 0 0 / 0.12);
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+  }
+  .player button svg { width: 72px; transition: transform 0.15s; }
+  .player button:hover svg { transform: scale(1.08); }
+  .player :global(iframe) { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+</style>

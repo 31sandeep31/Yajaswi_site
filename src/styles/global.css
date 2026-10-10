@@ -1,0 +1,156 @@
+@import '@fontsource/mukta/400.css';
+@import '@fontsource/mukta/500.css';
+@import '@fontsource/mukta/700.css';
+@import '@fontsource/fraunces/500.css';
+@import '@fontsource/fraunces/600.css';
+@import '@fontsource/noto-serif-devanagari/600.css';
+@import '@fontsource/noto-serif-devanagari/700.css';
+
+:root {
+  --paper: #f8f4ee;
+  --paper-2: #efe8dd;
+  --card: #fffdf9;
+  --ink: #1d1a17;
+  --ink-2: #4a443d;
+  --ink-3: #7a7168;
+  --line: #e0d6c8;
+  --red: #b3122a;
+  --red-deep: #8c0d20;
+  --red-tint: #f6e3e2;
+  --green: #1f6b4a;
+
+  --font-body: 'Mukta', system-ui, sans-serif;
+  --font-display: 'Fraunces', 'Noto Serif Devanagari', Georgia, serif;
+  --font-deva-display: 'Noto Serif Devanagari', 'Fraunces', serif;
+
+  --wrap: 1160px;
+  --gutter: clamp(16px, 4vw, 32px);
+  --radius: 14px;
+  --shadow: 0 1px 2px rgb(29 26 23 / 0.06), 0 8px 24px rgb(29 26 23 / 0.06);
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; }
+a:hover { color: var(--red); }
+:focus-visible { outline: 3px solid var(--red); outline-offset: 3px; border-radius: 4px; }
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  margin: 0 0 0.5em;
+  text-wrap: balance;
+}
+:lang(ne) h1, :lang(ne) h2, :lang(ne) h3, .deva-display {
+  font-family: var(--font-deva-display);
+  letter-spacing: 0;
+  line-height: 1.35;
+}
+p { margin: 0 0 1em; text-wrap: pretty; }
+
+.wrap { width: 100%; max-width: var(--wrap); margin-inline: auto; padding-inline: var(--gutter); }
+.section { padding-block: clamp(56px, 8vw, 104px); }
+.section--tint { background: var(--paper-2); }
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--red);
+  margin-bottom: 0.9rem;
+}
+.eyebrow::before { content: ''; width: 22px; height: 2px; background: currentColor; }
+.eyebrow:lang(ne) { letter-spacing: 0; text-transform: none; font-size: 0.95rem; }
+
+.section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 1rem 2rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+.section-head h2 { font-size: clamp(1.75rem, 3.6vw, 2.5rem); margin: 0; }
+.section-head .sub { color: var(--ink-3); margin: 0.35rem 0 0; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.7em 1.25em;
+  border-radius: 999px;
+  border: 1.5px solid var(--ink);
+  background: transparent;
+  color: var(--ink);
+  font: 600 0.95rem/1.2 var(--font-body);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.btn:hover { background: var(--ink); color: var(--paper); }
+.btn--red { background: var(--red); border-color: var(--red); color: #fff; }
+.btn--red:hover { background: var(--red-deep); border-color: var(--red-deep); color: #fff; }
+
+.link-arrow { font-weight: 600; text-decoration: none; white-space: nowrap; }
+.link-arrow::after { content: ' →'; }
+
+.grid { display: grid; gap: clamp(16px, 2.5vw, 28px); }
+.grid--3 { grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); }
+
+.tag {
+  display: inline-block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.15em 0.7em;
+  border-radius: 999px;
+  background: var(--red-tint);
+  color: var(--red-deep);
+}
+
+.prose { max-width: 68ch; font-size: 1.125rem; }
+.prose:lang(ne) { font-size: 1.1875rem; line-height: 1.85; }
+.prose h2 { font-size: 1.6rem; margin-top: 1.6em; }
+.prose h3 { font-size: 1.3rem; margin-top: 1.4em; }
+.prose img { border-radius: var(--radius); margin-block: 1.5em; }
+.prose blockquote {
+  margin: 1.5em 0;
+  padding-left: 1.2em;
+  border-left: 3px solid var(--red);
+  color: var(--ink-2);
+  font-style: italic;
+}
+.prose a { color: var(--red); }
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { transition: none !important; animation: none !important; }
+}
